@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html leng="en" ng-app="reminder">
+<head>
+	<meta charset="UTF-8">
+	<title>iCloud Reminder</title>
+<link rel="stylesheet" type="text/css" href="./css/reminder.css">
+<script type="text/javascript" src="./js/angular.js"></script>
+<script type="text/javascript" src="./js/reminder.js"></script>
+</head>
+<body ng-controller="rdCtrl">
+	<div class="left">
+		<div class="title">
+			<span>iCoud</span>
+			<span ng-click="addshijian()">+</span>
+		</div>
+		<ul>
+			<li ng-repeat="value in shijianliebiao track by $index" ng-class="{active:clistindex==$index}" ng-click="setItem($index)">
+				<span class="{{value.color}}"></span>
+				<div class="liebiao"><input type="text" ng-model="value.name" ng-blur="save()"></div>
+			</li>
+		</ul>
+	</div>
+	<div class="right" ng-class="shijianliebiao[clistindex].color">
+		<div class="right-top">
+			<input type="text" ng-model="key">
+		</div>
+		<div ng-show="key" class="right-cons">
+			<h1 ng-class="shijianliebiao[clistindex].color">这是"{{key}}"的搜索结果</h1>
+			<dl ng-repeat="value in shijianliebiao | search:key">
+				<dt>{{value.name}}</dt>
+				<dd ng-repeat="r in value.items">{{r.title}}</dd>
+			</dl>
+		</div>
+		<div class="right-con" ng-hide="key">
+			<div class="right-title">
+				<div class="right-title-left">{{shijianliebiao[clistindex].name}}</div>
+				<div class="right-title-right">
+					<div class="xuanxiang">
+						<div>选项</div>
+						<div class="yanse">
+							<div><input type="text" ng-model="shijianliebiao[clistindex].name" ng-blur="save()" ng-class="shijianliebiao[clistindex].color"></div>
+							<div class="yanse-color">列表颜色</div>
+							<div class="yanse-liebiao">
+								<ul>
+									<li ng-repeat="value in colors" ng-class="value" ng-click="shijianliebiao[clistindex].color=value"></li>
+								</ul>
+							</div>
+							<div class="yanse-shanchu" ng-click="deleteItem()">删除</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="right-home">
+				<div class="right-wancheng">
+					<div class="done-item">已完成：<span>{{countDone()}}</span>&nbsp;项</div>
+					<ul>
+						<li ng-repeat="value in shijianliebiao[clistindex].items track by $index" ng-show="value.isDone">
+							<span ng-click="value.isDone=false;save()">{{value.isDone}}</span>
+							<input type="text" ng-model="value.title" ng-blur="save()">
+							<button ng-click="deleteTodo($index)" ng-class="shijianliebiao[clistindex].color">删除该项提醒</button>
+						</li>
+					</ul> 
+				</div>
+				<div class="right-xinjian">
+					<ul>
+						<li ng-repeat="value in shijianliebiao[clistindex].items track by $index" ng-hide="value.isDone">
+							<span ng-click="value.isDone=true;save()">{{value.isDone}}</span>
+							<input type="text" ng-model="value.title" ng-blur="save()" ng-calss="{rightover:clistindex==$index}" ng-click="setItem()">
+							<button ng-click="deleteTodo($index)" ng-class="shijianliebiao[clistindex].color">删除该项提醒</button>
+						</li>
+					</ul>
+					<div class="done-item" ng-click="addItems()">新项目...</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+<script>
+	
+	var xuanxiang=document.querySelector('.xuanxiang div');
+	var yanse=document.querySelector('.yanse');
+	var flag=true;
+	xuanxiang.onclick=function(){
+		
+		if(flag){
+			yanse.style.display="block";
+			flag=false;
+		}
+		else{
+			yanse.style.display="none";
+			flag=true;
+		}
+	}
+
+</script>
+</html>
